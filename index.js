@@ -39,10 +39,10 @@ async function init() {
         transform: body => cheerio.load(body)
     });
 
-    const column = $('.dt-row-group .jsx-468550366.fare-day').each((i, precio) => {
+    $('.dt-row-group .jsx-468550366.fare-day').each((i, precio) => {
         const precioTexto = $(precio).text();
-        dict.agregar(i, precioTexto); // Solo agregamos al diccionario sin incrementar i
-        arrayDePreciosAux.push(precioTexto); // Añadimos al array sin incrementar i
+        dict.agregar(i, precioTexto); // agregamos al dic
+        arrayDePreciosAux.push(precioTexto); // agregamos al arreglo
     });
 
     arrayDePreciosAux.sort((a, b) => {
@@ -57,7 +57,7 @@ async function init() {
         return precioNum > 0;
     });
     console.log(preciosMayoresACero);
-    const valorBuscado = "$8999";
+    const valorBuscado = "$10399";
     const llavesEncontradas = dict.encontrarLlavesPorValor(valorBuscado);
 
     if (llavesEncontradas !== null) {
