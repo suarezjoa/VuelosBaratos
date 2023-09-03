@@ -35,36 +35,29 @@ var arrayDePreciosAux = [];
 
 async function init() {
     const $ = await request({
-        uri: "https://flybondi.com/ar/search/dates?adults=1&children=0&fromCityCode=BUE&infants=0&toCityCode=MDZ",
+        uri: "https://flybondi.com/ar/search/dates?adults=1&children=0&currency=ARS&fromCityCode=MDZ&infants=0&toCityCode=BUE&utm_origin=search_bar",
         transform: body => cheerio.load(body)
     });
 
     $('.dt-row-group .jsx-468550366.fare-day').each((i, precio) => {
         const precioTexto = $(precio).text();
-        dict.agregar(i, precioTexto); // agregamos al dic
-        arrayDePreciosAux.push(precioTexto); // agregamos al arreglo
+        dict.agregar(i+1, precioTexto); // Corregimos el índice para que el mes comience en el día 1
     });
 
-    arrayDePreciosAux.sort((a, b) => {
-        // Convierte las cadenas a números y compara para la ordenación
-        const precioA = parseFloat(a.replace(/\D/g, ''));
-        const precioB = parseFloat(b.replace(/\D/g, ''));
-        return precioA - precioB;
+    const arrayDePrecios = Object.entries(dict.getItems())
+        .filter(([key, value]) => value[0] && value[0] !== '$0') // Filtramos los precios válidos
+        .map(([key, value]) => ({ date: key, price: parseFloat(value[0].replace('$', '')) })) // Mapeamos a objetos {date, price}
+        .sort((a, b) => a.price - b.price); // Ordenamos por precio de menor a mayor
+
+    const tresPreciosMenores = arrayDePrecios.slice(0, 3); // Tomamos los tres precios menores
+
+    tresPreciosMenores.forEach(({ date, price }) => {
+        console.log(`Fecha: ${date}, Precio: $${price}`);
     });
 
-    const preciosMayoresACero = arrayDePreciosAux.filter(precio => {
-        const precioNum = parseFloat(precio.replace(/\D/g, ''));
-        return precioNum > 0;
-    });
-    console.log(preciosMayoresACero);
-    const valorBuscado = "$10399";
-    const llavesEncontradas = dict.encontrarLlavesPorValor(valorBuscado);
+    console.log(dict);
 
-    if (llavesEncontradas !== null) {
-        console.log(`Las claves para el valor ${valorBuscado} son "${llavesEncontradas.join(', ')}"`);
-    } else {
-        console.log(`El valor ${valorBuscado} no se encontró en el diccionario`);
-    }
 }
 
 init();
+
