@@ -17,15 +17,15 @@ async function main() {
     const vueltaData = await vueltaActor.sendAndReceive("scrapeVuelta"); // Envía un mensaje al actor y recibe una respuesta
     console.log("Resultados de Vuelta (local):", vueltaData); // Imprime los resultados
 
-    // Actor remoto para Ida
-    const idaActorRemoto = await rootActor.createChild(IdaActor, {
+    // Crear un actor remoto para Ida
+    const idaActorRemoto = await rootActor.createChild(RemoteActor, {
       mode: "remote",
       host: "192.168.1.26",
     });
     const idaDataRemoto = await idaActorRemoto.sendAndReceive("scrapeIda"); // Envía un mensaje al actor remoto y recibe una respuesta
     console.log("Resultados de Ida (remoto):", idaDataRemoto); // Imprime los resultados
 
-    // Actor remoto para Vuelta
+    // Crear un actor remoto para Vuelta
     const vueltaActorRemoto = await rootActor.createChild(VueltaActor, {
       mode: "remote",
       host: "192.168.1.26",
