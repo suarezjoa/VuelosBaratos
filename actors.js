@@ -18,18 +18,12 @@ async function main() {
     console.log("Resultados de Vuelta (local):", vueltaData);// Imprime los resultados
 
     // Actor remoto para Ida
-    const idaActorRemoto = await rootActor.createChild(IdaActor, {
-      mode: "remote",
-      host: "192.168.1.26",
-    });
+    const idaActorRemoto = await rootActor.createChild(IdaActor, {mode: "remote",host: "172.16.12.67",});
     const idaDataRemoto = await idaActorRemoto.sendAndReceive("scrapeIda");
     console.log("Resultados de Ida (remoto):", idaDataRemoto);
 
     // Actor remoto para Vuelta
-    const vueltaActorRemoto = await rootActor.createChild(VueltaActor, {
-      mode: "remote",
-      host: "192.168.1.26",
-    });
+    const vueltaActorRemoto = await rootActor.createChild(VueltaActor, {mode: "remote",host: "172.16.12.67",});
     const vueltaDataRemoto = await vueltaActorRemoto.sendAndReceive("scrapeVuelta");
     console.log("Resultados de Vuelta (remoto):", vueltaDataRemoto);
   } catch (err) {
@@ -40,3 +34,4 @@ async function main() {
 }
 
 main();
+
